@@ -1,0 +1,12 @@
+{
+  "appId": "com.aninest.app",
+  "appName": "AniNest",
+  "webDir": "public",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}
