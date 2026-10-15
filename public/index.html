@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AniNest</title>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0b0a1a"><script src="config.js"></script>
+<style>
+:root{--bg:#0b0a1a;--card:#15132b;--line:#272347;--tx:#f2f0ff;--mu:#8b87b0;--ac:#7c3aed;--ac2:#a78bfa;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--tx);font:14px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+#app{max-width:480px;margin:0 auto;height:100%;display:flex;flex-direction:column;position:relative}
+#main{flex:1;overflow-y:auto;padding:14px 16px 24px}
+h1{font-size:22px}h2{font-size:16px;margin:18px 0 10px;display:flex;justify-content:space-between;align-items:center}
+.mu{color:var(--mu);font-size:12px}.ac{color:var(--ac2)}
+.btn{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:0;border-radius:12px;padding:12px 16px;font-weight:600;font-size:14px;width:100%;cursor:pointer}
+.btn.sm{width:auto;padding:8px 14px;font-size:12px}
+.chip{display:inline-block;padding:7px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--tx);font-size:12px;margin:0 6px 6px 0;cursor:pointer}
+.chip.on{background:var(--ac);border-color:var(--ac)}
+.row{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.poster{border-radius:12px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:8px;font-weight:700;font-size:12px;line-height:1.2;text-shadow:0 1px 6px #000a}
+.p{width:104px;height:148px;flex:none}.t{width:54px;height:72px;flex:none;font-size:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px}
+.item{display:flex;gap:12px;align-items:center;padding:10px;margin-bottom:10px;cursor:pointer}
+.item .b{flex:1;min-width:0}.item b{display:block;margin-bottom:3px}
+.hero{height:200px;border-radius:18px;padding:16px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;cursor:pointer}
+.bar{height:64px;display:flex;border-top:1px solid var(--line);background:#0e0c20;padding-bottom:env(safe-area-inset-bottom,0px);height:calc(64px + env(safe-area-inset-bottom,0px))}
+.bar div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--mu);font-size:11px;cursor:pointer}
+.bar div.on{color:var(--ac2)}.bar i{font-style:normal;font-size:20px}
+input[type=text]{width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--tx);font-size:14px;outline:0}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:12px}.top h1{font-size:18px;flex:1}
+.ic{background:none;border:0;color:var(--tx);font-size:22px;cursor:pointer;padding:4px}
+.tog{width:44px;height:26px;border-radius:13px;background:#3a3660;position:relative;cursor:pointer;flex:none}
+.tog.on{background:var(--ac)}.tog:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}.tog.on:after{left:21px}
+.lr{display:flex;justify-content:space-between;align-items:center;padding:14px;border-bottom:1px solid var(--line)}.lr:last-child{border:0}
+.gen{height:68px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.splash{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(circle at 50% 30%,#4c1d95,#0b0a1a 65%)}
+.logo{font-size:64px}.splash h1{font-size:36px}
+video{width:100%;border-radius:14px;background:#000;max-height:260px}
+input[type=range]{width:100%;accent-color:var(--ac)}
+.pc{display:flex;justify-content:center;align-items:center;gap:28px;margin:12px 0}
+.pc .ic{font-size:30px}
+.pb{height:4px;background:var(--line);border-radius:2px;margin-top:8px}.pb i{display:block;height:100%;background:var(--ac);border-radius:2px}
+.badge{background:#ef4444;border-radius:50%;padding:2px 7px;font-size:11px}
+a.go{color:#fff;background:var(--ac);padding:7px 12px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600}
+</style></head><body><div id="app"><div id="main"></div><div class="bar" id="bar" style="display:none"></div></div>
+<script>
+const G=(a,b)=>`linear-gradient(145deg,${a},${b})`;
+const bg=a=>a.img?`linear-gradient(#0003,#000b),url(${a.img}) center/cover`:bg(a);
+let A=[
+{id:1,n:"Moonlit Blade",g:["Action","Fantasy","Adventure"],y:2021,s:8.7,e:26,c:["#7c3aed","#1e1b4b"],d:"A young swordsman travels a moonlit empire to end an ancient curse."},
+{id:2,n:"Sky Pirates",g:["Adventure","Comedy"],y:2019,s:8.4,e:48,c:["#f59e0b","#b91c1c"],d:"A ragged crew chases legendary treasure across floating islands."},
+{id:3,n:"Shadow Grid",g:["Action","Mystery"],y:2023,s:8.1,e:12,c:["#06b6d4","#0f172a"],d:"A hacker uncovers a hidden city living beneath the real one."},
+{id:4,n:"Court Ace",g:["Drama","Comedy"],y:2020,s:8.9,e:25,c:["#fb923c","#7c2d12"],d:"A small school volleyball team fights its way to nationals."},
+{id:5,n:"Starlit Letters",g:["Romance","Drama"],y:2022,s:7.9,e:13,c:["#ec4899","#4c1d95"],d:"Two pen pals meet under a meteor shower that rewrites time."},
+{id:6,n:"Iron Bloom",g:["Fantasy","Adventure"],y:2018,s:8.5,e:64,c:["#22c55e","#064e3b"],d:"An alchemist's apprentice searches for a flower that never wilts."},
+{id:7,n:"Night Detective",g:["Mystery","Drama"],y:2017,s:8.6,e:37,c:["#6366f1","#020617"],d:"A sleepless detective solves crimes that only happen after midnight."},
+{id:8,n:"Daily Bento",g:["Slice of Life","Comedy"],y:2024,s:7.8,e:12,c:["#a3e635","#365314"],d:"A cozy tale of a lunch-box shop and its regulars."}];
+const GEN=["Action","Adventure","Comedy","Drama","Fantasy","Mystery","Romance","Slice of Life"];
+const GC=["#dc2626","#d97706","#ca8a04","#7c3aed","#2563eb","#0d9488","#db2777","#65a30d"];
+const SV=[["Crunchyroll","#f47521"],["Netflix","#e50914"],["Hulu","#1ce783"],["Prime Video","#00a8e1"]];
+let S={scr:"splash",tab:"home",id:null,ep:1,q:"",gf:"",wt:"All",wl:{},st:{ne:true,rec:true,up:false},lang:"English",vq:"Auto",vid:null,sub:null};
+try{const x=JSON.parse(localStorage.getItem("aninest")||"null");if(x){S.wl=x.wl||{};S.st=x.st||S.st;S.ca=x.ca||[];S.ca.forEach(c=>{if(!A.find(a=>a.id==c.id))A.push(c)})}}catch(e){}
+const save=()=>{try{localStorage.setItem("aninest",JSON.stringify({wl:S.wl,st:S.st,ca:A.filter(a=>S.wl[a.id])}))}catch(e){}};
+const $=s=>document.querySelector(s),M=$("#main"),B=$("#bar");
+const find=id=>A.find(a=>a.id==id);
+const poster=(a,cls)=>`<div class="poster ${cls}" style="background:${bg(a)}">${cls=="t"?"":a.n}</div>`;
+function go(scr,o={}){Object.assign(S,o,{scr});render()}
+function tab(t){S.tab=t;go({home:"home",search:"search",library:"watch",profile:"profile"}[t])}
+function render(){
+ const sc=S.scr;B.style.display=sc=="splash"||sc=="player"?"none":"flex";
+ B.innerHTML=[["home","⌂","Home"],["search","⌕","Search"],["library","▤","Library"],["profile","☺","Profile"]].map(([k,i,l])=>`<div class="${S.tab==k?"on":""}" onclick="tab('${k}')"><i>${i}</i>${l}</div>`).join("");
+ M.innerHTML=V[sc]();M.scrollTop=0;
+ if(sc=="splash")setTimeout(()=>{if(S.scr=="splash")go("home")},1800);
+ if(sc=="player")bindPlayer();
+}
+const back=(t,r="")=>`<div class="top"><button class="ic" onclick="history_()">←</button><h1>${t}</h1>${r}</div>`;
+function history_(){go(S.prev||"home")}
+const item=a=>`<div class="card item" onclick="open_(${a.id})">${poster(a,"t")}<div class="b"><b>${a.n}</b><span class="mu">${a.g.join(" · ")}</span></div><span class="mu">›</span></div>`;
+function open_(id){S.prev=S.scr;go("detail",{id})}
+const V={
+splash:()=>`<div class="splash" style="position:absolute;inset:0;z-index:5"><div class="logo">🐱</div><h1>AniNest</h1><div class="mu" style="font-size:15px">Your Anime Universe</div><div class="mu" style="margin-top:30px">Discover · Watch · Enjoy</div></div>`,
+home:()=>{const h=A[0];return`<div class="top"><h1 class="ac">🐱 AniNest</h1><button class="ic" onclick="tab('search')">⌕</button></div>
+<div class="hero" style="background:${bg(h)}" onclick="open_(1)"><span class="mu">TRENDING</span><h1>${h.n}</h1><span class="mu">${h.g.join(" · ")}</span><button class="btn sm" style="width:130px">▶ Watch Now</button></div>
+<h2>Trending Now</h2><div class="row">${A.slice(1,6).map(a=>`<div onclick="open_(${a.id})">${poster(a,"p")}</div>`).join("")}</div>
+<h2>New Episodes</h2>${A.slice(2,5).map(a=>`<div class="card item" onclick="open_(${a.id})">${poster(a,"t")}<div class="b"><b>${a.n}</b><span class="mu">Episode ${a.e}</span></div><span class="chip on" style="margin:0">New</span></div>`).join("")}`},
+search:()=>{const r=A.filter(a=>(!S.q||a.n.toLowerCase().includes(S.q.toLowerCase()))&&(!S.gf||a.g.includes(S.gf)));
+ return`<input type="text" id="q" placeholder="Search anime, genres..." value="${S.q}" oninput="S.q=this.value;sr();srv()">
+<h2>Genres</h2><div>${GEN.map(g=>`<span class="chip ${S.gf==g?"on":""}" onclick="S.gf=S.gf=='${g}'?'':'${g}';render()">${g}</span>`).join("")}</div>
+<h2>Results <span class="mu">${r.length}</span></h2><div id="res">${r.map(item).join("")||'<p class="mu">Nothing found.</p>'}</div>`},
+detail:()=>{const a=find(S.id),w=S.wl[a.id];return`${back("",`<button class="ic" style="color:${w?"#ec4899":"#fff"}" onclick="tw(${a.id})">♥</button>`)}
+<div class="hero" style="background:${bg(a)};height:170px"><h1>${a.n}</h1></div>
+<p class="mu" style="margin:10px 0">TV · ${a.y} · ${a.e} eps &nbsp; <span style="color:#fbbf24">★ ${a.s}</span></p>
+<div>${a.g.map(g=>`<span class="chip">${g}</span>`).join("")}</div><p style="margin:10px 0;line-height:1.5">${a.d}</p>
+<button class="btn" onclick="tw(${a.id})">${w?"✓ In Watchlist":"+ Add to Watchlist"}</button>
+<h2>Episodes</h2>${Array.from({length:Math.min(a.e||4,12)},(_,i)=>i+1).map(n=>`<div class="card item" onclick="go('episode',{ep:${n}})"><div class="b"><b>S1 E${n}</b><span class="mu">Episode ${n} · 23 min</span></div><span class="mu">›</span></div>`).join("")}`},
+episode:()=>{const a=find(S.id);return`${back("Watch Episode")}
+<div class="hero" style="background:${bg(a)};height:150px;align-items:center;justify-content:center" onclick="go('player')"><span style="font-size:44px">▶</span></div>
+<p style="margin:10px 0"><b>${a.n}</b><br><span class="mu">S1 E${S.ep} · 23 min · Subtitles available</span></p>
+<button class="btn" onclick="go('player')">Play in my player</button>
+<h2>Official Streaming Services</h2><p class="mu" style="margin-bottom:10px">Availability varies by region.</p>
+${SV.map(([n,c])=>`<div class="card item"><span style="width:10px;height:36px;border-radius:4px;background:${c}"></span><div class="b"><b>${n}</b><span class="mu">Sub | Dub · Region dependent</span></div><a class="go" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(a.n+" anime on "+n)}">Go to site</a></div>`).join("")}`},
+player:()=>{const a=find(S.id);return`${back("")}
+<video id="v" playsinline ${S.vid?`src="${S.vid}"`:""}>${S.sub?`<track kind="subtitles" default src="${S.sub}" label="Subtitles">`:""}</video>
+${S.vid?`<input type="range" id="sk" min="0" max="100" value="0"><div class="mu" style="display:flex;justify-content:space-between"><span id="tm">0:00</span><span id="du">0:00</span></div>
+<div class="pc"><button class="ic" onclick="v.currentTime-=10">⟲10</button><button class="ic" id="pp" onclick="v.paused?v.play():v.pause()">▶</button><button class="ic" onclick="v.currentTime+=10">10⟳</button></div>`:`<div class="card" style="padding:16px;margin-top:12px"><b>Load your own video</b><p class="mu" style="margin:6px 0 12px">Play licensed or self-hosted files (MP4/WebM) with your own .vtt subtitles. Nothing is uploaded; it plays on your device.</p><input type="file" accept="video/*" onchange="lf(this,'vid')"></div>`}
+<div class="card" style="padding:14px;margin-top:12px"><b>Subtitles (.vtt)</b><br><input type="file" accept=".vtt" style="margin-top:8px" onchange="lf(this,'sub')"></div>
+<h2>${a.n}</h2><span class="mu">S1 E${S.ep}</span>`},
+watch:()=>{const l=A.filter(a=>S.wl[a.id]&&(S.wt=="All"||S.wl[a.id]==S.wt));
+ return`<div class="top"><h1>My Watchlist</h1></div><div>${["All","Watching","Plan to Watch"].map(t=>`<span class="chip ${S.wt==t?"on":""}" onclick="S.wt='${t}';render()">${t}</span>`).join("")}</div><div style="margin-top:8px">
+${l.map(a=>`<div class="card item" onclick="open_(${a.id})">${poster(a,"t")}<div class="b"><b>${a.n}</b><span class="mu">${S.wl[a.id]}</span><div class="pb"><i style="width:${(a.id*13)%80+10}%"></i></div></div><button class="ic" onclick="event.stopPropagation();tw(${a.id},1)">✕</button></div>`).join("")||'<p class="mu">Your list is empty. Open an anime and tap Add to Watchlist.</p>'}</div>`},
+profile:()=>`<div class="top" style="gap:14px"><div class="poster" style="width:60px;height:60px;border-radius:50%;background:${G("#7c3aed","#ec4899")};font-size:24px;align-items:center;justify-content:center">Y</div><div style="flex:1"><h1>Yaki</h1><span class="mu">Anime is life</span></div></div>
+<div class="card" style="margin-top:8px">${[["My Watchlist",Object.keys(S.wl).length,"tab('library')"],["Continue Watching",2,"tab('home')"],["Notifications","","go('settings')"],["Settings","›","go('settings')"],["About AniNest","1.0.0",""]].map(([t,r,f])=>`<div class="lr" onclick="${f}"><span>${t}</span><span class="mu">${r}</span></div>`).join("")}</div>
+<h2>Categories</h2><div class="grid">${GEN.map((g,i)=>`<div class="gen" style="background:${GC[i]}" onclick="S.gf='${g}';S.q='';tab('search')">${g}</div>`).join("")}</div>`,
+settings:()=>{const T=(k,l)=>`<div class="lr"><span>${l}</span><div class="tog ${S.st[k]?"on":""}" onclick="S.st['${k}']=!S.st['${k}'];save();render()"></div></div>`;
+ return`${back("Settings")}<h2>Account</h2><div class="card"><div class="lr"><span>Language</span><span class="mu">${S.lang}</span></div><div class="lr"><span>Video Quality</span><span class="mu">${S.vq}</span></div></div>
+<h2>Notifications</h2><div class="card">${T("ne","New Episodes")}${T("rec","Recommendations")}${T("up","App Updates")}</div>
+<h2>About</h2><div class="card"><div class="lr"><span>App Version</span><span class="mu">1.0.0</span></div></div>`}
+};
+let _t;function srv(){clearTimeout(_t);_t=setTimeout(async()=>{if(S.q.length<2)return;try{const r=await fetch((window.ANINEST_API||'')+'/api/anime/search?q='+encodeURIComponent(S.q));const d=await r.json();d.forEach(x=>{if(!A.find(a=>a.id==x.id))A.push(x)});sr()}catch(e){}},400)}
+function sr(){const r=A.filter(a=>(!S.q||a.n.toLowerCase().includes(S.q.toLowerCase()))&&(!S.gf||a.g.includes(S.gf)));$("#res").innerHTML=r.map(item).join("")||'<p class="mu">Nothing found.</p>'}
+function tw(id,rm){if(S.wl[id]||rm)delete S.wl[id];else S.wl[id]="Plan to Watch";save();render()}
+function lf(el,k){const f=el.files[0];if(!f)return;if(S[k])URL.revokeObjectURL(S[k]);S[k]=URL.createObjectURL(f);render()}
+function fm(t){t=Math.floor(t||0);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function bindPlayer(){const v=$("#v");if(!v||!S.vid)return;const sk=$("#sk");
+ v.onloadedmetadata=()=>$("#du").textContent=fm(v.duration);
+ v.ontimeupdate=()=>{sk.value=v.currentTime/v.duration*100||0;$("#tm").textContent=fm(v.currentTime)};
+ v.onplay=()=>$("#pp").textContent="❚❚";v.onpause=()=>$("#pp").textContent="▶";
+ sk.oninput=()=>v.currentTime=sk.value/100*v.duration;window.v=v}
+async function boot(){try{const r=await fetch((window.ANINEST_API||'')+'/api/anime/trending');if(r.ok){const d=await r.json();if(d.length){A=d;(S.ca||[]).forEach(c=>{if(!A.find(a=>a.id==c.id))A.push(c)})}}}catch(e){}}
+boot().then(()=>{if(S.scr!='splash')render()});render();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+try{const P=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App;if(P)P.addListener('backButton',()=>{S.scr=='home'?P.exitApp():history_()})}catch(e){}
+</script></body></html>
